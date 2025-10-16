@@ -1,30 +1,67 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue'
+
+const count = ref(0)
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="container">
+    <div class="logo-container">
+      <img src="./pictures/Logo.png" class="logo" alt="Drift logo" />
+    </div>
+    <div class="counter-section">
+      <button type="button" @click="count++">Click: {{ count }}</button>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 3rem;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+}
+
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  max-width: 400px;
+  width: 100%;
+  height: auto;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.counter-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+button {
+  font-size: 1.2em;
+  padding: 0.8em 1.5em;
+  border-radius: 12px;
+  border: 2px solid #0066cc;
+  background-color: #0066cc;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+button:hover {
+  background-color: #0052a3;
+  border-color: #0052a3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
 }
 </style>
