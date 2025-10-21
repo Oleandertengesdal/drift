@@ -1,6 +1,3 @@
-/**
- * Desktop icon type definition
- */
 export interface DesktopIcon {
   id: string;
   name: string;
@@ -12,17 +9,12 @@ export interface DesktopIcon {
   action?: () => void;
 }
 
-/**
- * Position interface for draggable elements
- */
 export interface Position {
   x: number;
   y: number;
 }
 
-/**
- * Window interface for opened windows/tabs
- */
+
 export interface Window {
   id: string;
   title: string;

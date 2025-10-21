@@ -150,7 +150,6 @@ const handleFocus = () => {
       </div>
     </div>
 
-    <!-- Window Content -->
     <div class="window-content">
       <div class="content-placeholder">
         <img :src="window.icon" alt="" class="content-icon" />
@@ -235,6 +234,10 @@ const handleFocus = () => {
 .title-bar-button:active {
   border-color: #000000 #ffffff #ffffff #000000;
   background: #c0c0c0;
+}
+
+.title-bar-button.minimize {
+  padding-bottom: 5px;
 }
 
 .title-bar-button.close {

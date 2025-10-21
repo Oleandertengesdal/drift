@@ -7,5 +7,4 @@ import Desktop from './components/Desktop.vue';
 </template>
 
 <style scoped>
-/* No additional scoped styles needed - all styling is in Desktop component */
 </style>

@@ -33,7 +33,6 @@ const desktopIcons = ref<DesktopIconType[]>([
     name: 'Bin',
     icon: new URL('../assets/images/icons/Bin.png', import.meta.url).href,
     position: { x: 20, y: 320 },
-    action: () => openWindow('4', 'Bin', new URL('../assets/images/icons/Bin.png', import.meta.url).href),
   },
 ]);
 
