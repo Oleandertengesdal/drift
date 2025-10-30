@@ -19,7 +19,7 @@ const handlePixelCarClick = () => {
     <div class="about-us-content">
       <h2>Om TIHLDE Drift</h2>
       <p>Velkommen til TIHLDE Drift</p>
-      <p>TIHLDE Drift består av 19 personer som hjelper å vedlikeholde TIHLDE's datasystemer og infrastruktur.</p>
+      <p>TIHLDE Drift består av ~19 personer drifter TIHLDEs infrastruktur og datasystemer.</p>
       <p>Vi jobber med blant annet: </p>
       <p>- 1</p>
       <p>- 2</p>

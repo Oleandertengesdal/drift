@@ -5,13 +5,30 @@ interface Member {
   id: string;
   name: string;
   role: string;
+  email: string;
   image?: string;
 }
 
 const members = ref<Member[]>([
-  { id: '1', name: 'Medlem 1', role: 'Rolle 1' },
-  { id: '2', name: 'Medlem 2', role: 'Rolle 2' },
-  { id: '3', name: 'Medlem 3', role: 'Rolle 3' },
+  { id: '1', name: 'Stian Closs Walmann', role: 'Leder/Driftsminister', email: ' driftsminister@tihlde.org' },
+  { id: '2', name: 'Borgar Barland', role: 'Nest-leder', email: '-' },
+  { id: '3', name: 'Alexander Owren Elton', role: 'Drift KI', email: '-' },
+  { id: '4', name: 'Felix Krogvold', role: '-', email: '-' },
+  { id: '5', name: 'Gard Alhaug', role: 'Kiosk system', email: '-' },
+  { id: '6', name: 'Kristian Ask Selmer', role: 'CTF', email: '-' },
+  { id: '7', name: 'Mads Nylund', role: '-', email: '-' },
+  { id: '8', name: 'Martin Godø', role: 'Monitorering', email: '-' },
+  { id: '9', name: 'Mateo Souto', role: '-', email: '-' },
+  { id: '10', name: 'Mathias Hølestøl', role: '-', email: '-' },
+  { id: '11', name: 'Sander Bratvold', role: 'Monitorering', email: 'sander.bratvold@tihlde.org' },
+  { id: '12', name: 'Sander Burud Sundbye', role: 'DevOps', email: '-' },
+  { id: '13', name: 'Sebastian Ellefsen Burmo', role: 'CTF', email: '-' },
+  { id: '14', name: 'Sigve Eriksen', role: 'Nettside Uansvarlig / Kiosk system', email: 'sigveer@tihlde.org' },
+  { id: '15', name: 'Sindre Jentoft Bøe', role: 'CTF', email: '-' },
+  { id: '16', name: 'Sofe Sirevåg Tysdal', role: 'DevOps', email: '-' },
+  { id: '17', name: 'Sondre Søndergaard', role: 'Monitorering', email: '-' },
+  { id: '18', name: 'Sunniva Mathiesen Hanasand', role: 'Drift KI', email: '-' },
+  { id: '19', name: 'Viet-Uy Do', role: '-', email: '-' },
 ]);
 </script>
 
@@ -23,7 +40,9 @@ const members = ref<Member[]>([
         <div v-for="member in members" :key="member.id" class="member-card">
           <div class="field-row-stacked">
             <label>{{ member.name }}</label>
-            <p>{{ member.role }}</p>
+            <p class="role-label">Ansvarsområde:</p>
+            <p class="role-value">{{ member.role }}</p>
+            <a :href="`mailto:${member.email}`" class="member-email">{{ member.email }}</a>
           </div>
         </div>
       </div>
@@ -57,10 +76,29 @@ const members = ref<Member[]>([
 
 .member-card label {
   font-weight: bold;
-  margin-bottom: 5px;
+  font-size: 14px;
 }
 
-.member-card p {
-  margin: 5px 0 0 0;
+.member-card .role-label {
+  margin: 10px 0 0 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.member-card .role-value {
+  margin: 2px 0 0 0;
+  font-size: 14px;
+}
+
+.member-email {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #0000ff;
+  text-decoration: underline;
+}
+
+.member-email:hover {
+  color: #ff00ff;
 }
 </style>

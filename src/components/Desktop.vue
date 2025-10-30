@@ -62,6 +62,9 @@ const openWindow = (id: string, title: string, icon: string, component?: string)
   let windowSize = { width: 600, height: 400 };
   if (id === 'about-us') {
     windowSize = { width: 700, height: 500 };
+  } 
+  if (id === 'members') {
+    windowSize = { width: 1200, height: 750 };
   }
   
   const newWindow: WindowType = {
