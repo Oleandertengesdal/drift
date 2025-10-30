@@ -49,11 +49,12 @@ const handleSubmit = () => {
         </div>
 
         <div class="field-row" style="justify-content: flex-end; margin-top: 15px;">
-          <button type="submit">Send bestilling</button>
+          <button type="submit" disabled>Send bestilling</button>
           <button type="button" @click="formData = { name: '', email: '', message: '' }">
             Tøm
           </button>
         </div>
+        <p class="disabled-note">* I ustand</p>
       </form>
     </div>
   </div>

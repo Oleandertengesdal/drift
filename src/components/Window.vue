@@ -20,7 +20,6 @@ const emit = defineEmits<Emits>();
 const AboutUsWindow = defineAsyncComponent(() => import('./windows/AboutUsWindow.vue'));
 const MembersWindow = defineAsyncComponent(() => import('./windows/MembersWindow.vue'));
 const OrderWindow = defineAsyncComponent(() => import('./windows/OrderWindow.vue'));
-const BinWindow = defineAsyncComponent(() => import('./windows/BinWindow.vue'));
 const KioskScreenWindow = defineAsyncComponent(() => import('./windows/KioskScreenWindow.vue'));
 const DriftGifWindow = defineAsyncComponent(() => import('./windows/DriftGifWindow.vue'));
 
@@ -28,7 +27,6 @@ const componentMap: Record<string, any> = {
   'about-us': AboutUsWindow,
   'members': MembersWindow,
   'order': OrderWindow,
-  'bin': BinWindow,
   'kiosk screen': KioskScreenWindow,
   'drift-gif': DriftGifWindow,
 };
