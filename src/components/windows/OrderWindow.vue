@@ -8,18 +8,18 @@ const formData = ref({
 });
 
 const handleSubmit = () => {
-  console.log('Order submitted:', formData.value);
-  alert('Order submitted! (This is a placeholder)');
+  console.log('Bestilling sendt inn:', formData.value);
+  alert('Bestilling sendt inn! (Dette er en midlertidig melding)');
 };
 </script>
 
 <template>
   <div class="window-body">
     <div class="order-content">
-      <h2>Place an Order</h2>
+      <h2>Opprett bestilling</h2>
       <form @submit.prevent="handleSubmit">
         <div class="field-row-stacked">
-          <label for="name">Name:</label>
+          <label for="name">Navn:</label>
           <input 
             id="name" 
             type="text" 
@@ -29,7 +29,7 @@ const handleSubmit = () => {
         </div>
         
         <div class="field-row-stacked">
-          <label for="email">Email:</label>
+          <label for="email">E-post:</label>
           <input 
             id="email" 
             type="email" 
@@ -39,7 +39,7 @@ const handleSubmit = () => {
         </div>
         
         <div class="field-row-stacked">
-          <label for="message">Message:</label>
+          <label for="message">Melding:</label>
           <textarea 
             id="message" 
             v-model="formData.message"
@@ -49,9 +49,9 @@ const handleSubmit = () => {
         </div>
 
         <div class="field-row" style="justify-content: flex-end; margin-top: 15px;">
-          <button type="submit">Submit Order</button>
+          <button type="submit">Send bestilling</button>
           <button type="button" @click="formData = { name: '', email: '', message: '' }">
-            Clear
+            Tøm
           </button>
         </div>
       </form>

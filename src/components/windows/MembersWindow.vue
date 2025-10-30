@@ -9,16 +9,16 @@ interface Member {
 }
 
 const members = ref<Member[]>([
-  { id: '1', name: 'Member 1', role: 'Role 1' },
-  { id: '2', name: 'Member 2', role: 'Role 2' },
-  { id: '3', name: 'Member 3', role: 'Role 3' },
+  { id: '1', name: 'Medlem 1', role: 'Rolle 1' },
+  { id: '2', name: 'Medlem 2', role: 'Rolle 2' },
+  { id: '3', name: 'Medlem 3', role: 'Rolle 3' },
 ]);
 </script>
 
 <template>
   <div class="window-body">
     <div class="members-content">
-      <h2>Drift Members</h2>
+      <h2>Drift-medlemmer</h2>
       <div class="members-list">
         <div v-for="member in members" :key="member.id" class="member-card">
           <div class="field-row-stacked">

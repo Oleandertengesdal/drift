@@ -4,6 +4,7 @@ import type { Window } from '../types/desktop';
 
 interface Props {
   window: Window;
+  openWindow?: (id: string, title: string, icon: string, component?: string) => void;
 }
 
 interface Emits {
@@ -21,6 +22,7 @@ const MembersWindow = defineAsyncComponent(() => import('./windows/MembersWindow
 const OrderWindow = defineAsyncComponent(() => import('./windows/OrderWindow.vue'));
 const BinWindow = defineAsyncComponent(() => import('./windows/BinWindow.vue'));
 const KioskScreenWindow = defineAsyncComponent(() => import('./windows/KioskScreenWindow.vue'));
+const DriftGifWindow = defineAsyncComponent(() => import('./windows/DriftGifWindow.vue'));
 
 const componentMap: Record<string, any> = {
   'about-us': AboutUsWindow,
@@ -28,6 +30,7 @@ const componentMap: Record<string, any> = {
   'order': OrderWindow,
   'bin': BinWindow,
   'kiosk screen': KioskScreenWindow,
+  'drift-gif': DriftGifWindow,
 };
 
 const windowComponent = computed(() => {
@@ -173,13 +176,14 @@ const handleFocus = () => {
     <component 
       :is="windowComponent" 
       v-if="windowComponent"
+      :open-window="props.openWindow"
       class="window-content-component"
     />
     <div v-else class="window-body">
       <div class="content-placeholder">
         <img :src="window.icon" alt="" class="content-icon" />
         <h2>{{ window.title }}</h2>
-        <p>Window content will be implemented here.</p>
+        <p>Vindusinnhold vil bli implementert her.</p>
       </div>
     </div>
     

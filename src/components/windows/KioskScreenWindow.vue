@@ -1,7 +1,7 @@
 <template>
   <div class="kiosk-screen-window">
-    <h2>Kiosk Screen</h2>
-    <p>Her kan du vise innhold for Kiosk Screen.</p>
+    <h2>Kioskskjerm</h2>
+    <p>Kommer senere.</p>
   </div>
 </template>
 
@@ -10,11 +10,4 @@
 </script>
 
 <style scoped>
-.kiosk-screen-window {
-  padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  min-width: 300px;
-  min-height: 200px;
-}
 </style>

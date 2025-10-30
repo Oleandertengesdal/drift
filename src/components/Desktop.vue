@@ -9,38 +9,38 @@ import wallpaper from '../assets/images/wallpaper.jpg';
 const desktopIcons = ref<DesktopIconType[]>([
   {
     id: '1',
-    name: 'About Us',
+    name: 'Om oss',
     icon: new URL('../assets/images/icons/AboutUs.png', import.meta.url).href,
     position: { x: 20, y: 20 },
-    action: () => openWindow('about-us', 'About us', new URL('../assets/images/icons/AboutUs.png', import.meta.url).href, 'about-us'),
+    action: () => openWindow('about-us', 'Om oss', new URL('../assets/images/icons/AboutUs.png', import.meta.url).href, 'about-us'),
   },
   {
     id: '2',
-    name: 'Members',
+    name: 'Medlemmer',
     icon: new URL('../assets/images/icons/Members.png', import.meta.url).href,
     position: { x: 20, y: 120 },
-    action: () => openWindow('members', 'Members', new URL('../assets/images/icons/Members.png', import.meta.url).href, 'members'),
+    action: () => openWindow('members', 'Medlemmer', new URL('../assets/images/icons/Members.png', import.meta.url).href, 'members'),
   },
   {
     id: '3',
-    name: 'Order',
+    name: 'Bestilling',
     icon: new URL('../assets/images/icons/Mail.png', import.meta.url).href,
     position: { x: 20, y: 220 },
-    action: () => openWindow('order', 'Order', new URL('../assets/images/icons/Mail.png', import.meta.url).href, 'order'),
+    action: () => openWindow('order', 'Bestilling', new URL('../assets/images/icons/Mail.png', import.meta.url).href, 'order'),
   },
   {
     id: '4',
-    name: 'Bin',
+    name: 'Papirkurv',
     icon: new URL('../assets/images/icons/Bin.png', import.meta.url).href,
     position: { x: 20, y: 320 },
-    action: () => openWindow('bin', 'Recycle Bin', new URL('../assets/images/icons/Bin.png', import.meta.url).href, 'bin'),
+    action: () => openWindow('bin', 'Papirkurv', new URL('../assets/images/icons/Bin.png', import.meta.url).href, 'bin'),
   },
   {
     id: '5',
-    name: 'Kiosk Screen',
+    name: 'Kioskskjerm',
     icon: new URL('../assets/images/icons/kiosk_screen.png', import.meta.url).href,
     position: { x: 1220, y: 120 },
-    action: () => openWindow('kiosk screen', 'Kiosk Screen', new URL('../assets/images/icons/kiosk_screen.png', import.meta.url).href, 'kiosk screen'),
+    action: () => openWindow('kiosk screen', 'Kioskskjerm', new URL('../assets/images/icons/kiosk_screen.png', import.meta.url).href, 'kiosk screen'),
   },
 ]);
 
@@ -58,12 +58,18 @@ const openWindow = (id: string, title: string, icon: string, component?: string)
   }
 
   const offset = windows.value.length * 30;
+  
+  let windowSize = { width: 600, height: 400 };
+  if (id === 'about-us') {
+    windowSize = { width: 700, height: 500 };
+  }
+  
   const newWindow: WindowType = {
     id,
     title,
     icon,
     position: { x: 100 + offset, y: 80 + offset },
-    size: { width: 600, height: 400 },
+    size: windowSize,
     isMaximized: false,
     isMinimized: false,
     zIndex: nextZIndex.value++,
@@ -125,6 +131,7 @@ const maximizeWindow = (id: string) => {
         v-for="window in windows"
         :key="window.id"
         :window="window"
+        :open-window="openWindow"
         @close="closeWindow"
         @focus="focusWindow"
         @minimize="minimizeWindow"

@@ -57,7 +57,7 @@ const handleWindowRightClick = (event: MouseEvent, windowId: string) => {
         :class="{ minimized: window.isMinimized }"
         @click="handleWindowClick(window)"
         @contextmenu="handleWindowRightClick($event, window.id)"
-        :title="`${window.title} (Right-click to close)`"
+        :title="`${window.title} (Høyreklikk for å lukke)`"
       >
         <img :src="window.icon" alt="" class="taskbar-item-icon" />
         <span class="taskbar-item-text">{{ window.title }}</span>
@@ -194,7 +194,7 @@ const handleWindowRightClick = (event: MouseEvent, windowId: string) => {
 
 .clock {
   color: #000;
-  font-size: 12px;
+  font-size: 20px;
   font-weight: normal;
   min-width: 50px;
   text-align: center;
