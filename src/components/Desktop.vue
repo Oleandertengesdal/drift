@@ -43,6 +43,19 @@ const desktopIcons = ref<DesktopIconType[]>([
     position: { x: 1220, y: 120 },
     action: () => openWindow('kiosk screen', 'Kioskskjerm', new URL('../assets/images/icons/kiosk_screen.png', import.meta.url).href, 'kiosk screen'),
   },
+  {
+    id: '6',
+    name: 'Minecraft Server',
+    icon: new URL('../assets/images/icons/Minecraft_icon.svg', import.meta.url).href,
+    position: {x: 120, y: 20},
+    action: () => openWindow('minecraft server', 'Minecraft Server', new URL('../assets/images/icons/Minecraft_icon.svg', import.meta.url).href, 'minecraft server'),
+  },
+  {
+    id: '7',
+    name: 'Clippy AI',
+    icon: new URL('../assets/images/icons/Clippy.png', import.meta.url).href,
+    position: {x: 220, y: 120},
+  },
 ]);
 
 const windows = ref<WindowType[]>([]);
@@ -75,6 +88,9 @@ const openWindow = (id: string, title: string, icon: string, component?: string)
   }
   if (id === 'order') {
     windowSize = { width: 600, height: 420}
+  }
+  if (id === 'minecraft server') {
+    windowSize = { width: 650, height: 550 };
   }
   
   const newWindow: WindowType = {

@@ -24,6 +24,7 @@ const MembersWindow = defineAsyncComponent(() => import('./windows/MembersWindow
 const OrderWindow = defineAsyncComponent(() => import('./windows/OrderWindow.vue'));
 const KioskScreenWindow = defineAsyncComponent(() => import('./windows/KioskScreenWindow.vue'));
 const DriftGifWindow = defineAsyncComponent(() => import('./windows/AboutUsWindow/DriftGifWindow.vue'));
+const MinecraftWindow = defineAsyncComponent(() => import('./windows/MinecraftWindow.vue'));
 
 const componentMap: Record<string, any> = {
   'about-us': AboutUsWindow,
@@ -31,6 +32,7 @@ const componentMap: Record<string, any> = {
   'order': OrderWindow,
   'kiosk screen': KioskScreenWindow,
   'drift-gif': DriftGifWindow,
+  'minecraft server': MinecraftWindow,
 };
 
 const windowComponent = computed(() => {
