@@ -52,12 +52,6 @@ const desktopIcons = ref<DesktopIconType[]>([
   },
   {
     id: '7',
-    name: 'Clippy AI',
-    icon: new URL('../assets/images/icons/Clippy.png', import.meta.url).href,
-    position: {x: 220, y: 120},
-  },
-  {
-    id: '6',
     name: 'Clippy',
     icon: new URL('../assets/images/icons/Clippy.webp', import.meta.url).href,
     position: { x: 500, y: 500 },
