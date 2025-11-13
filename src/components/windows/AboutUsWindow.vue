@@ -21,9 +21,9 @@ const handlePixelCarClick = () => {
       <p>Velkommen til TIHLDE Drift</p>
       <p>TIHLDE Drift består av ~19 personer som drifter TIHLDEs infrastruktur og datasystemer.</p>
       <p>Vi jobber med blant annet: </p>
-      <p>- 1</p>
-      <p>- 2</p>
-      <p>- 3</p>
+      <p>1. Vi hoster infrastrukturen</p>
+      <p>2. Utvikler tekniske løsninger for TIHLDE</p>
+      <p>3. Vi koser oss</p>
       <p></p>
       <p>Om du har noen spørsmål kan du kontakte oss via epost til: <a href="mailto:driftsminister@tihlde.org">driftsminister@tihlde.org</a></p>
       
@@ -52,13 +52,13 @@ const handlePixelCarClick = () => {
 .about-us-content p {
   margin: 10px 0;
   line-height: 1.6;
-  font-size: 18px; 
+  font-size: 20px; 
 }
 
 .pixel-car {
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  right: 1px;
   width: 48px;
   height: auto;
   cursor: pointer;

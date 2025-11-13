@@ -27,8 +27,7 @@ const members = ref<Member[]>([
   { id: '15', name: 'Sindre Jentoft Bøe', role: 'CTF', email: '-' },
   { id: '16', name: 'Sofe Sirevåg Tysdal', role: 'DevOps', email: '-' },
   { id: '17', name: 'Sondre Søndergaard', role: 'Monitorering', email: '-' },
-  { id: '18', name: 'Sunniva Mathiesen Hanasand', role: 'Drift KI', email: '-' },
-  { id: '19', name: 'Viet-Uy Do', role: '-', email: '-' },
+  { id: '18', name: 'Viet-Uy Do', role: '-', email: '-' },
 ]);
 </script>
 

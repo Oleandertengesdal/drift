@@ -215,6 +215,7 @@ onMounted(() => {
 
 .copy-button {
   font-size: 13px;
+  margin-top: -2px;
 }
 
 .refresh-button  {
