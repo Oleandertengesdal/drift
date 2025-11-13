@@ -45,7 +45,7 @@ const handleWindowRightClick = (event: MouseEvent, windowId: string) => {
 <template>
   <div class="taskbar">
     <div class="start-button">
-      <img src="../assets/images/icons/Start.png" alt="Start" class="Start-icon" />
+      <img src="../assets/images/icons/start.png" alt="Start" class="Start-icon" />
       <span>Start</span>
     </div>
     
