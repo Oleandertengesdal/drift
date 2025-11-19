@@ -11,7 +11,7 @@ interface Member {
 
 const members = ref<Member[]>([
   { id: '1', name: 'Stian Closs Walmann', role: 'Leder / Driftsminister', email: ' driftsminister@tihlde.org' },
-  { id: '2', name: 'Borgar Barland', role: 'Nestleder', email: '-' },
+  { id: '2', name: 'Borgar Barland', role: 'Nestleder', email: 'borgar@tihlde.org' },
   { id: '3', name: 'Alexander Owren Elton', role: 'Clippy', email: '-' },
   { id: '4', name: 'Felix Krogvold', role: 'Utenlandske relasjoner', email: '-' },
   { id: '5', name: 'Gard Alhaug', role: 'Kiosksystem', email: '-' },
