@@ -3,10 +3,14 @@ import { ref, computed } from 'vue';
 import DesktopIcon from './DesktopIcon.vue';
 import Taskbar from './Taskbar.vue';
 import Window from './Window.vue';
+import LoadingBar from './LoadingBar.vue';
 import ExternalKioskScreen from './windows/KioskScreenWindow/ExternalKioskScreen.vue';
 import InternalKioskScreen from './windows/KioskScreenWindow/InternalKioskScreen.vue';
 import type { DesktopIcon as DesktopIconType, Window as WindowType } from '../types/desktop';
 import wallpaper from '../assets/images/wallpaper.jpg';
+
+const showLoadingBar = ref(false);
+let pendingWindowData: { id: string, title: string, icon: string, component?: string } | null = null;
 
 const desktopIcons = ref<DesktopIconType[]>([
   {
@@ -79,6 +83,19 @@ const openWindow = (id: string, title: string, icon: string, component?: string)
     return;
   }
 
+  // 1/3 chance to show loading bar
+  const shouldShowLoading = Math.random() < 1/3;
+  
+  if (shouldShowLoading) {
+    pendingWindowData = { id, title, icon, component };
+    showLoadingBar.value = true;
+    return;
+  }
+
+  createWindow(id, title, icon, component);
+};
+
+const createWindow = (id: string, title: string, icon: string, component?: string) => {
   const offset = windows.value.length * 30;
   
   let windowSize = { width: 600, height: 400 };
@@ -174,10 +191,30 @@ const requestFullscreen = () => {
     elem.requestFullscreen();
   }
 };
+
+const onLoadingComplete = () => {
+  showLoadingBar.value = false;
+  if (pendingWindowData) {
+    const { id, title, icon, component } = pendingWindowData;
+    createWindow(id, title, icon, component);
+    pendingWindowData = null;
+  }
+};
+
+const onLoadingCancel = () => {
+  showLoadingBar.value = false;
+  pendingWindowData = null;
+};
 </script>
 
 <template>
   <div class="desktop">
+    <LoadingBar 
+      v-if="showLoadingBar" 
+      :on-complete="onLoadingComplete" 
+      :on-cancel="onLoadingCancel"
+    />
+    
     <ExternalKioskScreen 
       v-if="showExternalKiosk"
       @close="closeExternalKiosk"
