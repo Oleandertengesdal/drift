@@ -13,13 +13,13 @@ const members = ref<Member[]>([
   { id: '1', name: 'Stian Closs Walmann', role: 'Leder / Driftsminister', email: ' driftsminister@tihlde.org' },
   { id: '2', name: 'Borgar Barland', role: 'Nestleder', email: '-' },
   { id: '3', name: 'Alexander Owren Elton', role: 'Clippy', email: '-' },
-  { id: '4', name: 'Felix Krogvold', role: 'Utenlandske relasjoner', email: '-' },
+  { id: '4', name: 'Felix Krogvold', role: 'CTF', email: '-' },
   { id: '5', name: 'Gard Alhaug', role: 'Kiosksystem', email: '-' },
   { id: '6', name: 'Kristian Ask Selmer', role: 'CTF', email: '-' },
   { id: '7', name: 'Mads Nylund', role: 'Være Unc', email: '-' },
   { id: '8', name: 'Martin Godø', role: 'Monitorering', email: '-' },
   { id: '9', name: 'Mateo Souto', role: 'Ghosting', email: '-' },
-  { id: '10', name: 'Mathias Hølestøl', role: 'Utenlandske relasjoner', email: '-' },
+  { id: '10', name: 'Mathias Hølestøl', role: '???', email: '-' },
   { id: '11', name: 'Sander Bratvold', role: 'Botsjef / Monitorering', email: 'sander.bratvold@tihlde.org' },
   { id: '12', name: 'Sander Burud Sundbye', role: 'DevOps', email: '-' },
   { id: '13', name: 'Sebastian Ellefsen Burmo', role: 'CTF', email: '-' },
@@ -28,7 +28,7 @@ const members = ref<Member[]>([
   { id: '16', name: 'Sofie Sirevåg Tysdal', role: 'DevOps', email: '-' },
   { id: '17', name: 'Sondre Søndergaard', role: 'Økonomiansvarlig / Monitorering', email: '-' },
   { id: '18', name: 'Steven Ha', role: 'Clippy', email: '-' },
-  { id: '19', name: 'Viet-Uy Do', role: 'Rikets sikkerhet', email: '-' },
+  { id: '19', name: 'Viet-Uy Do', role: '???', email: '-' },
 ]);
 </script>
 
