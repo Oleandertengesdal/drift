@@ -30,7 +30,13 @@ const sendMessage = async () => {
         "Content-Type": "application/json",
         "x-api-key": "super-secret-token",
       },
-      body: JSON.stringify({ question: userText }),
+      body: JSON.stringify({ 
+        question: userText,
+        history: messages.value
+          .filter((msg) => msg.from === "user" || msg.from === "clippy")
+          .filter((msg) => msg.text !== userText) // Fjerner 'current question' fra historikken
+          .slice(-6), // Sender kun de siste 6 meldingene for kontekst
+      }),
     });
 
     const data = await response.json();
@@ -111,7 +117,7 @@ const sendMessage = async () => {
   flex-direction: column;
 }
 
-/* ---- Clippy Speech Bubble ---- */
+/* Clippy Speech Bubble */
 .clippy-bubble {
   position: relative;
   padding: 12px 15px;
@@ -139,7 +145,7 @@ const sendMessage = async () => {
   border-bottom: 10px solid transparent;
 }
 
-/* ---- Chat History ---- */
+/* Chat History */
 .chat-area {
   overflow-y: auto;
   flex: 1;
@@ -151,7 +157,7 @@ const sendMessage = async () => {
   font-size: 13px;
 }
 
-/* ---- Clippy Graphic ---- */
+/* Clippy Graphic */
 .clippy-column {
   display: flex;
   flex-direction: column;
@@ -171,7 +177,7 @@ const sendMessage = async () => {
   opacity: 0.85;
 }
 
-/* ---- Input ---- */
+/* Input */
 .chat-input {
   flex: 1;
 }
