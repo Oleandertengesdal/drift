@@ -1,0 +1,28 @@
+{
+  "name": "drift-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsdown",
+    "start": "node dist/index.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.2",
+  "dependencies": {
+    "@hono/node-server": "^1.19.9",
+    "dotenv": "^17.2.3",
+    "hono": "^4.11.7",
+    "ofetch": "^1.5.1",
+    "tsdown": "^0.20.1",
+    "tsx": "^4.21.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1"
+  }
+}
