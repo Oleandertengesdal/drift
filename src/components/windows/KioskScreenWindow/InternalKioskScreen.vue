@@ -22,7 +22,9 @@
       </div>
       <div v-else-if="error" class="error">
         <p>{{ error }}</p>
-        <button @click="loadData" class="retry-btn">Prøv igjen</button>
+        <button @click="() => loadData(true)" class="retry-btn">
+          Prøv igjen
+        </button>
       </div>
       <div v-else class="stats-container">
         <!-- Total products sold this year -->
