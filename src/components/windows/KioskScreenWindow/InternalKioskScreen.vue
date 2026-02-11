@@ -3,8 +3,15 @@
     <div class="header">
       <h1>Salgsstatistikk</h1>
       <button @click="exitFullscreen" class="close-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 6L6 18M6 6l12 12"/>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M18 6L6 18M6 6l12 12" />
         </svg>
       </button>
     </div>
@@ -22,7 +29,9 @@
         <div class="total-section">
           <div class="total-card">
             <div class="card-label">Totalt solgt i år</div>
-            <div class="total-number">{{ totalProductsThisYear.toLocaleString('nb-NO') }}</div>
+            <div class="total-number">
+              {{ totalProductsThisYear.toLocaleString("nb-NO") }}
+            </div>
             <div class="card-subtitle">produkter</div>
           </div>
         </div>
@@ -37,8 +46,8 @@
             </div>
             <div class="products-grid">
               <div v-if="weekProducts.length > 0">
-                <div 
-                  v-for="product in weekProducts" 
+                <div
+                  v-for="product in weekProducts"
                   :key="product.name"
                   class="product-box"
                 >
@@ -58,8 +67,8 @@
             </div>
             <div class="products-grid">
               <div v-if="yearProducts.length > 0">
-                <div 
-                  v-for="product in yearProducts" 
+                <div
+                  v-for="product in yearProducts"
                   :key="product.name"
                   class="product-box"
                 >
@@ -72,17 +81,15 @@
           </div>
         </div>
 
-        <div class="last-updated">
-          Sist oppdatert: {{ lastUpdated }}
-        </div>
+        <div class="last-updated">Sist oppdatert: {{ lastUpdated }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { apiClient } from '@/api/client';
+import { ref, onMounted } from "vue";
+import { apiClient } from "@/api/client";
 
 interface ProductStat {
   name: string;
@@ -98,23 +105,23 @@ const error = ref<string | null>(null);
 const totalProductsThisYear = ref(0);
 const weekProducts = ref<ProductStat[]>([]);
 const yearProducts = ref<ProductStat[]>([]);
-const lastUpdated = ref('');
+const lastUpdated = ref("");
 
 const exitFullscreen = () => {
   if (document.fullscreenElement) {
     document.exitFullscreen();
   }
-  emit('close');
+  emit("close");
 };
 
 const aggregateProducts = (purchases: any[]): ProductStat[] => {
   const productMap = new Map<string, number>();
-  
-  purchases.forEach(purchase => {
+
+  purchases.forEach((purchase) => {
     if (purchase.products) {
       purchase.products.forEach((product: any) => {
         if (product.name) {
-          const quantity = parseFloat(product.quantity || '1');
+          const quantity = parseFloat(product.quantity || "1");
           const current = productMap.get(product.name) || 0;
           productMap.set(product.name, current + quantity);
         }
@@ -129,10 +136,10 @@ const aggregateProducts = (purchases: any[]): ProductStat[] => {
 
 const getTotalProducts = (purchases: any[]): number => {
   let total = 0;
-  purchases.forEach(purchase => {
+  purchases.forEach((purchase) => {
     if (purchase.products) {
       purchase.products.forEach((product: any) => {
-        const quantity = parseFloat(product.quantity || '1');
+        const quantity = parseFloat(product.quantity || "1");
         total += quantity;
       });
     }
@@ -140,31 +147,31 @@ const getTotalProducts = (purchases: any[]): number => {
   return total;
 };
 
-const loadData = async () => {
-  loading.value = true;
+const loadData = async (showLoading: boolean = true) => {
+  loading.value = showLoading;
   error.value = null;
 
   try {
     const now = new Date();
-    
+
     // Calculate date ranges - use UTC to avoid timezone issues
     const year = now.getFullYear();
     const month = now.getMonth();
     const date = now.getDate();
     const day = now.getDay();
-    
+
     // Start of year (YYYY-01-01)
     const startOfYear = `${year}-01-01`;
-    
+
     // Start of week (Monday)
     const mondayOffset = day === 0 ? -6 : 1 - day; // If Sunday (0), go back 6 days, else go to Monday
     const monday = new Date(year, month, date + mondayOffset);
-    const startOfWeek = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`;
-    
-    // Today (YYYY-MM-DD)
-    const today = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+    const startOfWeek = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, "0")}-${String(monday.getDate()).padStart(2, "0")}`;
 
-    console.log('🔍 Fetching data:', { startOfYear, startOfWeek, today });
+    // Today (YYYY-MM-DD)
+    const today = `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+
+    console.log("🔍 Fetching data:", { startOfYear, startOfWeek, today });
 
     // Fetch data for each period
     const [yearResponse, weekResponse] = await Promise.all([
@@ -172,28 +179,28 @@ const loadData = async () => {
         query: {
           startDate: startOfYear,
           endDate: today,
-        }
+        },
       }),
       apiClient.api.zettle.purchases.$get({
         query: {
           startDate: startOfWeek,
           endDate: today,
-        }
-      })
+        },
+      }),
     ]);
 
     if (!yearResponse.ok || !weekResponse.ok) {
-      throw new Error('Kunne ikke hente data fra API');
+      throw new Error("Kunne ikke hente data fra API");
     }
 
     const yearData = await yearResponse.json();
     const weekData = await weekResponse.json();
 
-    console.log('📊 Data received:', { 
-      yearPurchases: yearData.length, 
+    console.log("📊 Data received:", {
+      yearPurchases: yearData.length,
       weekPurchases: weekData.length,
       yearData: yearData.slice(0, 2), // Log første 2 for debugging
-      weekData: weekData.slice(0, 2)
+      weekData: weekData.slice(0, 2),
     });
 
     // Process data
@@ -201,12 +208,12 @@ const loadData = async () => {
     const weekProductsList = aggregateProducts(weekData);
     const totalProducts = getTotalProducts(yearData);
 
-    console.log('✅ Processed:', {
+    console.log("✅ Processed:", {
       yearProducts: yearProductsList.length,
       weekProducts: weekProductsList.length,
       totalProducts: totalProducts,
       topYearProducts: yearProductsList.slice(0, 5),
-      topWeekProducts: weekProductsList.slice(0, 5)
+      topWeekProducts: weekProductsList.slice(0, 5),
     });
 
     // Update reactive values
@@ -214,10 +221,11 @@ const loadData = async () => {
     weekProducts.value = weekProductsList;
     totalProductsThisYear.value = totalProducts;
 
-    lastUpdated.value = new Date().toLocaleString('nb-NO');
+    lastUpdated.value = new Date().toLocaleString("nb-NO");
   } catch (e) {
-    console.error('❌ Error loading Zettle data:', e);
-    error.value = 'Kunne ikke laste statistikk. Sjekk at backend-serveren kjører.';
+    console.error("❌ Error loading Zettle data:", e);
+    error.value =
+      "Kunne ikke laste statistikk. Sjekk at backend-serveren kjører.";
   } finally {
     loading.value = false;
   }
@@ -226,18 +234,23 @@ const loadData = async () => {
 onMounted(() => {
   loadData();
   // Auto-refresh every 5 minutes
-  const intervalId = setInterval(loadData, 5 * 60 * 1000);
-  
+  const intervalId = setInterval(() => loadData(false), 1000 * 30);
+
   // Cleanup on unmount
   return () => clearInterval(intervalId);
 });
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 .internal-kiosk-screen {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
   width: 100vw;
   height: 100vh;
   background: #0a0a0a;
@@ -249,7 +262,12 @@ onMounted(() => {
 .internal-kiosk-screen *,
 .internal-kiosk-screen *::before,
 .internal-kiosk-screen *::after {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
   cursor: default !important;
 }
 
@@ -321,7 +339,9 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loading p,
@@ -372,13 +392,18 @@ onMounted(() => {
 }
 
 .total-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(99, 102, 241, 0.5),
+    transparent
+  );
 }
 
 .card-label {
@@ -393,7 +418,11 @@ onMounted(() => {
 .total-number {
   font-size: 5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -469,13 +498,18 @@ onMounted(() => {
 }
 
 .product-box::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(99, 102, 241, 0.4),
+    transparent
+  );
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -502,7 +536,11 @@ onMounted(() => {
   color: #ffffff;
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -527,15 +565,15 @@ onMounted(() => {
   .products-section {
     grid-template-columns: 1fr;
   }
-  
+
   .products-grid > div {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   }
-  
+
   .total-card {
     padding: 40px 60px;
   }
-  
+
   .total-number {
     font-size: 4rem;
   }
@@ -545,19 +583,19 @@ onMounted(() => {
   .header {
     padding: 20px 24px;
   }
-  
+
   .header h1 {
     font-size: 1.5rem;
   }
-  
+
   .content {
     padding: 24px;
   }
-  
+
   .total-card {
     padding: 32px 40px;
   }
-  
+
   .total-number {
     font-size: 3rem;
   }

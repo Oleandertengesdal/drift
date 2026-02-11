@@ -55,7 +55,7 @@ export class ZettleAPI {
   async getPurchases({
     startDate,
     endDate,
-    limit = 100,
+    limit = 1000,
     purchaseHash,
   }: {
     startDate: Date;
