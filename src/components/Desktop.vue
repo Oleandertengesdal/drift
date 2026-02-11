@@ -58,7 +58,7 @@ const desktopIcons = ref<DesktopIconType[]>([
     id: '7',
     name: 'Clippy',
     icon: new URL('../assets/images/icons/Clippy.webp', import.meta.url).href,
-    position: { x: 500, y: 500 },
+    position: { x: 120, y: 120 },
     action: () => openWindow('clippy', 'Clippy', new URL('../assets/images/icons/Clippy.webp', import.meta.url).href, 'clippy'),
   },
   
