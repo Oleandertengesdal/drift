@@ -1,0 +1,25 @@
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --save 60 1
+    volumes:
+      - redis-data:/data
+
+  backend:
+    image: "????"
+    env_file:
+      # load ZETTLE_API_KEY and ZETTLE_CLIENT_ID from .env file
+      - .env
+    ports:
+      - "????:3000"
+    environment:
+      - REDIS_URL="<replace with redis url in docker network>"
+
+      - ZETTLE_API_KEY=${ZETTLE_API_KEY}
+      - ZETTLE_CLIENT_ID=${ZETTLE_CLIENT_ID}
+
+volumes:
+  redis-data:
+    driver: local
