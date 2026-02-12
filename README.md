@@ -75,5 +75,5 @@ For spørsmål eller tilbakemeldinger, kontakt:
 ---
 
 <p align="center">
-  <img src="src/assets/images/logos/LogoSirkel.png" alt="TIHLDE Drift Logo" width="100">
+  <img src="frontend/src/assets/images/logos/LogoSirkel.png" alt="TIHLDE Drift Logo" width="100">
 </p>
