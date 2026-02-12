@@ -1,40 +1,57 @@
 <script setup lang="ts">
-import { ref, computed, defineAsyncComponent } from 'vue';
-import type { Window } from '../types/desktop';
+import { ref, computed, defineAsyncComponent } from "vue";
+import type { Window } from "../types/desktop";
 
 interface Props {
   window: Window;
-  openWindow?: (id: string, title: string, icon: string, component?: string) => void;
+  openWindow?: (
+    id: string,
+    title: string,
+    icon: string,
+    component?: string,
+  ) => void;
 }
 
 interface Emits {
-  (e: 'close', id: string): void;
-  (e: 'focus', id: string): void;
-  (e: 'minimize', id: string): void;
-  (e: 'maximize', id: string): void;
-  (e: 'open-external-screen'): void;
-  (e: 'open-internal-screen'): void;
+  (e: "close", id: string): void;
+  (e: "focus", id: string): void;
+  (e: "minimize", id: string): void;
+  (e: "maximize", id: string): void;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const AboutUsWindow = defineAsyncComponent(() => import('./windows/AboutUsWindow.vue'));
-const MembersWindow = defineAsyncComponent(() => import('./windows/MembersWindow.vue'));
-const OrderWindow = defineAsyncComponent(() => import('./windows/OrderWindow.vue'));
-const KioskScreenWindow = defineAsyncComponent(() => import('./windows/KioskScreenWindow.vue'));
-const DriftGifWindow = defineAsyncComponent(() => import('./windows/AboutUsWindow/DriftGifWindow.vue'));
-const MinecraftWindow = defineAsyncComponent(() => import('./windows/MinecraftWindow.vue'));
-const ClippyWindow = defineAsyncComponent(() => import('./windows/ClippyWindow.vue'));
+const AboutUsWindow = defineAsyncComponent(
+  () => import("./windows/AboutUsWindow.vue"),
+);
+const MembersWindow = defineAsyncComponent(
+  () => import("./windows/MembersWindow.vue"),
+);
+const OrderWindow = defineAsyncComponent(
+  () => import("./windows/OrderWindow.vue"),
+);
+const KioskScreenWindow = defineAsyncComponent(
+  () => import("./windows/KioskScreenWindow.vue"),
+);
+const DriftGifWindow = defineAsyncComponent(
+  () => import("./windows/AboutUsWindow/DriftGifWindow.vue"),
+);
+const MinecraftWindow = defineAsyncComponent(
+  () => import("./windows/MinecraftWindow.vue"),
+);
+const ClippyWindow = defineAsyncComponent(
+  () => import("./windows/ClippyWindow.vue"),
+);
 
 const componentMap: Record<string, any> = {
-  'about-us': AboutUsWindow,
-  'members': MembersWindow,
-  'order': OrderWindow,
-  'kiosk screen': KioskScreenWindow,
-  'drift-gif': DriftGifWindow,
-  'minecraft server': MinecraftWindow,
-  'clippy': ClippyWindow
+  "about-us": AboutUsWindow,
+  members: MembersWindow,
+  order: OrderWindow,
+  "kiosk screen": KioskScreenWindow,
+  "drift-gif": DriftGifWindow,
+  "minecraft server": MinecraftWindow,
+  clippy: ClippyWindow,
 };
 
 const windowComponent = computed(() => {
@@ -53,10 +70,10 @@ const localMaximized = ref(props.window.isMaximized);
 const windowStyle = computed(() => {
   if (localMaximized.value) {
     return {
-      left: '0px',
-      top: '0px',
-      width: '100vw',
-      height: '100vh',
+      left: "0px",
+      top: "0px",
+      width: "100vw",
+      height: "100vh",
       zIndex: props.window.zIndex,
     };
   }
@@ -71,15 +88,15 @@ const windowStyle = computed(() => {
 
 const startDrag = (event: MouseEvent) => {
   if (localMaximized.value) return;
-  
-  emit('focus', props.window.id);
+
+  emit("focus", props.window.id);
   isDragging.value = true;
   dragOffset.value = {
     x: event.clientX - localPosition.value.x,
     y: event.clientY - localPosition.value.y,
   };
-  document.addEventListener('mousemove', onDrag);
-  document.addEventListener('mouseup', stopDrag);
+  document.addEventListener("mousemove", onDrag);
+  document.addEventListener("mouseup", stopDrag);
 };
 
 const onDrag = (event: MouseEvent) => {
@@ -93,15 +110,15 @@ const onDrag = (event: MouseEvent) => {
 
 const stopDrag = () => {
   isDragging.value = false;
-  document.removeEventListener('mousemove', onDrag);
-  document.removeEventListener('mouseup', stopDrag);
+  document.removeEventListener("mousemove", onDrag);
+  document.removeEventListener("mouseup", stopDrag);
 };
 
 const startResize = (event: MouseEvent) => {
   if (localMaximized.value) return;
-  
+
   event.preventDefault();
-  emit('focus', props.window.id);
+  emit("focus", props.window.id);
   isResizing.value = true;
   resizeStart.value = {
     width: localSize.value.width,
@@ -109,15 +126,15 @@ const startResize = (event: MouseEvent) => {
     mouseX: event.clientX,
     mouseY: event.clientY,
   };
-  document.addEventListener('mousemove', onResize);
-  document.addEventListener('mouseup', stopResize);
+  document.addEventListener("mousemove", onResize);
+  document.addEventListener("mouseup", stopResize);
 };
 
 const onResize = (event: MouseEvent) => {
   if (isResizing.value) {
     const deltaX = event.clientX - resizeStart.value.mouseX;
     const deltaY = event.clientY - resizeStart.value.mouseY;
-    
+
     localSize.value = {
       width: Math.max(300, resizeStart.value.width + deltaX),
       height: Math.max(200, resizeStart.value.height + deltaY),
@@ -127,40 +144,32 @@ const onResize = (event: MouseEvent) => {
 
 const stopResize = () => {
   isResizing.value = false;
-  document.removeEventListener('mousemove', onResize);
-  document.removeEventListener('mouseup', stopResize);
+  document.removeEventListener("mousemove", onResize);
+  document.removeEventListener("mouseup", stopResize);
 };
 
 const handleClose = () => {
-  emit('close', props.window.id);
+  emit("close", props.window.id);
 };
 
 const handleMinimize = () => {
-  emit('minimize', props.window.id);
+  emit("minimize", props.window.id);
 };
 
 const handleMaximize = () => {
   localMaximized.value = !localMaximized.value;
-  emit('maximize', props.window.id);
+  emit("maximize", props.window.id);
 };
 
 const handleFocus = () => {
-  emit('focus', props.window.id);
-};
-
-const handleOpenExternalScreen = () => {
-  emit('open-external-screen');
-};
-
-const handleOpenInternalScreen = () => {
-  emit('open-internal-screen');
+  emit("focus", props.window.id);
 };
 </script>
 
 <template>
-  <div 
+  <div
     v-if="!window.isMinimized"
-    class="window" 
+    class="window"
     :style="windowStyle"
     @mousedown="handleFocus"
   >
@@ -170,28 +179,17 @@ const handleOpenInternalScreen = () => {
         {{ window.title }}
       </div>
       <div class="title-bar-controls">
-        <button 
-          aria-label="Minimize" 
-          @click.stop="handleMinimize"
-        ></button>
-        <button 
-          aria-label="Maximize" 
-          @click.stop="handleMaximize"
-        ></button>
-        <button 
-          aria-label="Close" 
-          @click.stop="handleClose"
-        ></button>
+        <button aria-label="Minimize" @click.stop="handleMinimize"></button>
+        <button aria-label="Maximize" @click.stop="handleMaximize"></button>
+        <button aria-label="Close" @click.stop="handleClose"></button>
       </div>
     </div>
 
-    <component 
-      :is="windowComponent" 
+    <component
+      :is="windowComponent"
       v-if="windowComponent"
       :open-window="props.openWindow"
       class="window-content-component"
-      @open-external-screen="handleOpenExternalScreen"
-      @open-internal-screen="handleOpenInternalScreen"
     />
     <div v-else class="window-body">
       <div class="content-placeholder">
@@ -200,10 +198,10 @@ const handleOpenInternalScreen = () => {
         <p>Vindusinnhold vil bli implementert her.</p>
       </div>
     </div>
-    
-    <div 
+
+    <div
       v-if="!localMaximized"
-      class="resize-handle" 
+      class="resize-handle"
       @mousedown.stop="startResize"
     ></div>
   </div>
@@ -262,7 +260,7 @@ const handleOpenInternalScreen = () => {
 }
 
 .resize-handle::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   right: 0;

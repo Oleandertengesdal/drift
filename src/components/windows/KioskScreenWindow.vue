@@ -2,26 +2,16 @@
   <div class="kiosk-screen-window">
     <h2>Velg skjermtype</h2>
     <div class="button-container">
-      <button @click="openExternalScreen">Ekstern skjerm</button>
-      <button @click="openInternalScreen">Intern skjerm</button>
+      <RouterLink to="/kiosk-external">
+        <button>Ekstern skjerm</button>
+      </RouterLink>
+      <RouterLink to="/kiosk">
+        <button>Intern skjerm</button>
+      </RouterLink>
+      <!-- <button @click="openInternalScreen">Intern skjerm</button> -->
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const emit = defineEmits<{
-  openExternalScreen: [];
-  openInternalScreen: [];
-}>();
-
-const openExternalScreen = () => {
-  emit('openExternalScreen');
-};
-
-const openInternalScreen = () => {
-  emit('openInternalScreen');
-};
-</script>
 
 <style scoped>
 .kiosk-screen-window {
@@ -42,5 +32,6 @@ button {
   padding: 10px 20px;
   min-width: 200px;
   cursor: pointer;
+  width: 100%;
 }
 </style>

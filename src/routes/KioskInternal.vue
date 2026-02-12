@@ -92,15 +92,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { apiClient } from "@/api/client";
+import { useRouter } from "vue-router";
 
 interface ProductStat {
   name: string;
   amount: number;
 }
-
-const emit = defineEmits<{
-  close: [];
-}>();
 
 const loading = ref(true);
 const error = ref<string | null>(null);
@@ -108,12 +105,13 @@ const totalProductsThisYear = ref(0);
 const weekProducts = ref<ProductStat[]>([]);
 const yearProducts = ref<ProductStat[]>([]);
 const lastUpdated = ref("");
+const router = useRouter();
 
 const exitFullscreen = () => {
   if (document.fullscreenElement) {
     document.exitFullscreen();
   }
-  emit("close");
+  router.push("/");
 };
 
 const aggregateProducts = (purchases: any[]): ProductStat[] => {

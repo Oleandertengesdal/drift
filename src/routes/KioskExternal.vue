@@ -19,15 +19,14 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits<{
-  close: [];
-}>();
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const exitFullscreen = () => {
   if (document.fullscreenElement) {
     document.exitFullscreen();
   }
-  emit('close');
+  router.push("/");
 };
 </script>
 

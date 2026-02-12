@@ -1,10 +1,7 @@
-<script setup lang="ts">
-import Desktop from './components/Desktop.vue';
+<script lang="ts">
+import { RouterView } from "vue-router";
 </script>
 
 <template>
-  <Desktop />
+  <RouterView />
 </template>
-
-<style scoped>
-</style>
