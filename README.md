@@ -2,7 +2,7 @@
 Velkommen til TIHLDE Drift sin offisielle nettside!
 
 <p align="center">
-  <img src="src/assets/images/FrontSideBilde.png" alt="Forside screenshot" width="600">
+  <img src="frontend/src/assets/images/FrontSideBilde.png" alt="Forside screenshot" width="600">
 </p>
 
 ## Om nettsiden
