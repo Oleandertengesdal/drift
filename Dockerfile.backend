@@ -1,0 +1,42 @@
+# Multi-stage build for backend using pnpm
+FROM node:25-alpine AS base
+WORKDIR /app
+
+# Builder stage
+FROM base AS builder
+RUN npm install -g pnpm
+
+# Copy package files for dependency caching
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY backend/package.json ./backend/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy backend source code
+COPY backend/ ./backend/
+
+# Build the backend
+RUN pnpm --filter @drift/backend build
+
+# Runner stage
+FROM base AS runner
+WORKDIR /app
+
+RUN npm install -g pnpm
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY backend/package.json ./backend/
+
+# Install only production dependencies
+RUN pnpm install --prod --frozen-lockfile
+
+# Copy built backend from builder stage
+COPY --from=builder /app/backend/dist ./backend/dist
+
+# Expose backend port
+EXPOSE 3000
+
+# Run the backend
+CMD ["node", "backend/dist/index.mjs"]

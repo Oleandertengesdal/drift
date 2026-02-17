@@ -13,7 +13,7 @@ const app = new Hono<{
   .use(
     "*",
     cors({
-      origin: ["http://localhost:5173"],
+      origin: ["http://localhost:5173", "https://drift.tihlde.org"],
       credentials: true,
     }),
   )
