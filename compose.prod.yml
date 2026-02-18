@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
     ports:
-      - "127.0.0.1:6767:3000"
+      - "${BIND_ADDRESS:-127.0.0.1}:6767:3000"
     depends_on:
       - drift.tihlde.org-redis
     networks:
@@ -33,7 +33,7 @@ services:
       # load ZETTLE_API_KEY and ZETTLE_CLIENT_ID from .env file
       - .env
     ports:
-      - "127.0.0.1:9801:3000"
+      - "${BIND_ADDRESS:-127.0.0.1}:9801:3000"
     environment:
       - REDIS_URL=redis://drift.tihlde.org-redis:6379
     depends_on:
