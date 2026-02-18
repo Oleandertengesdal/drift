@@ -18,7 +18,7 @@ RUN pnpm install --frozen-lockfile
 # Kopier resten av koden
 COPY . .
 
-ENV VITE_API_ENDPOINT=https://api-drift.tihlde.org
+ENV VITE_API_ENDPOINT=https://api.drift.tihlde.org
 
 # Installer dependencies og bygg
 RUN pnpm build

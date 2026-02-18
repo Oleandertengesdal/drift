@@ -1,35 +1,31 @@
 services:
-  redis:
-    container_name: drift.tihlde.org-redis
+  drift.tihlde.org-redis:
+    container_name: api.drift.tihlde.org-redis
     image: redis:latest
     ports:
       - "127.0.0.1:6379:6379"
     command: redis-server --appendonly yes --save 60 1
     volumes:
-      - redis-data:/data
+      - drift.tihlde.org-redis-data:/data
     networks:
-      - drift-network
+      - drift.tihlde.org-network
     restart: unless-stopped
 
-  frontend:
+  drift.tihlde.org-frontend:
     container_name: drift.tihlde.org
     build:
       context: .
       dockerfile: Dockerfile.frontend
     ports:
       - "127.0.0.1:6767:3000"
-    environment:
-      - REDIS_URL=redis://redis:6379
-      - ZETTLE_API_KEY=${ZETTLE_API_KEY}
-      - ZETTLE_CLIENT_ID=${ZETTLE_CLIENT_ID}
     depends_on:
-      - redis
+      - drift.tihlde.org-redis
     networks:
-      - drift-network
+      - drift.tihlde.org-network
     restart: unless-stopped
 
-  backend:
-    container_name: api-drift.tihlde.org
+  drift.tihlde.org-backend:
+    container_name: api.drift.tihlde.org
     build:
       context: .
       dockerfile: Dockerfile.backend
@@ -39,19 +35,17 @@ services:
     ports:
       - "127.0.0.1:9801:3000"
     environment:
-      - REDIS_URL=redis://redis:6379
-      - ZETTLE_API_KEY=${ZETTLE_API_KEY}
-      - ZETTLE_CLIENT_ID=${ZETTLE_CLIENT_ID}
+      - REDIS_URL=redis://drift.tihlde.org-redis:6379
     depends_on:
-      - redis
+      - drift.tihlde.org-redis
     networks:
-      - drift-network
+      - drift.tihlde.org-network
     restart: unless-stopped
 
 networks:
-  drift-network:
+  drift.tihlde.org-network:
     driver: bridge
 
 volumes:
-  redis-data:
+  drift.tihlde.org-redis-data:
     driver: local
