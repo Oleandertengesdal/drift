@@ -135,7 +135,7 @@ const openWindow = (
   }
 
   // 1/3 chance to show loading bar
-  const shouldShowLoading = Math.random() < 1 / 3;
+  const shouldShowLoading = Math.random() < 1 / 6;
 
   if (shouldShowLoading) {
     pendingWindowData = { id, title, icon, component };
@@ -251,10 +251,76 @@ const onLoadingCancel = () => {
   showLoadingBar.value = false;
   pendingWindowData = null;
 };
+
+const isSelecting = ref(false);
+
+const selectionStart = ref({ x: 0, y: 0 });
+const selectionCurrent = ref({ x: 0, y: 0 });
+
+const selectionBox = computed(() => {
+  const x1 = selectionStart.value.x;
+  const y1 = selectionStart.value.y;
+  const x2 = selectionCurrent.value.x;
+  const y2 = selectionCurrent.value.y;
+
+  return {
+    left: Math.min(x1, x2) + "px",
+    top: Math.min(y1, y2) + "px",
+    width: Math.abs(x2 - x1) + "px",
+    height: Math.abs(y2 - y1) + "px",
+  };
+});
+
+const startSelection = (e: MouseEvent) => {
+  if (e.button !== 0) return;
+
+  isSelecting.value = true;
+
+  selectionStart.value = {
+    x: e.clientX,
+    y: e.clientY,
+  };
+
+  selectionCurrent.value = {
+    x: e.clientX,
+    y: e.clientY,
+  };
+};
+
+const updateSelection = (e: MouseEvent) => {
+  if (!isSelecting.value) return;
+
+  selectionCurrent.value = {
+    x: e.clientX,
+    y: e.clientY,
+  };
+};
+
+const endSelection = () => {
+  isSelecting.value = false;
+
+  // later: detect selected icons here
+};
+
+const select = (e: MouseEvent) => {
+  e.stopPropagation();
+};
 </script>
 
 <template>
-  <div class="desktop">
+  <div
+    class="desktop-background"
+    :style="{ backgroundImage: `url(${wallpaper})` }"
+    @mousedown="startSelection"
+    @mousemove="updateSelection"
+    @mouseup="endSelection"
+  >
+    <div
+      v-if="isSelecting"
+      class="selection-box"
+      :style="selectionBox"
+    />
+
     <LoadingBar
       v-if="showLoadingBar"
       :on-complete="onLoadingComplete"
@@ -263,24 +329,20 @@ const onLoadingCancel = () => {
 
     <ExternalKioskScreen v-if="showExternalKiosk" @close="closeExternalKiosk" />
 
-    <div
-      class="desktop-background"
-      :style="{ backgroundImage: `url(${wallpaper})` }"
-    >
-      <DesktopIcon v-for="icon in desktopIcons" :key="icon.id" :icon="icon" />
+    <DesktopIcon v-for="icon in desktopIcons" :key="icon.id" :icon="icon" @mousedown.stop />
 
-      <Window
-        v-for="window in windows"
-        :key="window.id"
-        :window="window"
-        :open-window="openWindow"
-        @close="closeWindow"
-        @focus="focusWindow"
-        @minimize="minimizeWindow"
-        @maximize="maximizeWindow"
-        @open-external-screen="openExternalKiosk"
-      />
-    </div>
+    <Window
+      v-for="window in windows"
+      :key="window.id"
+      :window="window"
+      :open-window="openWindow"
+      @close="closeWindow"
+      @focus="focusWindow"
+      @minimize="minimizeWindow"
+      @maximize="maximizeWindow"
+      @open-external-screen="openExternalKiosk"
+      @mousedown="select"
+    />
 
     <Taskbar
       v-if="!hasMaximizedWindow && !showExternalKiosk"
@@ -308,5 +370,13 @@ const onLoadingCancel = () => {
   background-repeat: no-repeat;
   background-size: auto;
   position: relative;
+}
+
+.selection-box {
+  position: absolute;
+  background: rgba(0,120,215,0.25);
+  border: 1px solid rgba(0,120,215,0.8);
+  pointer-events: none;
+  z-index: 9999;
 }
 </style>
