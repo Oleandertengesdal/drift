@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { apiClient } from "@/api/client";
 import { useRouter } from "vue-router";
-import { useQuery } from "@tanstack/vue-query";
+import { queryOptions, useQuery, useQueryClient } from "@tanstack/vue-query";
 import {
   isAfter,
   isEqual,
@@ -67,24 +67,38 @@ const exitFullscreen = () => {
   router.push("/");
 };
 
+const lastYearISOString = computed(() => lastYear.value.toISOString());
+const nowISOString = computed(() => now.value.toISOString());
+
+const queryClient = useQueryClient();
+
+const productsQuery = computed(() => {
+  return queryOptions({
+    queryKey: ["zettle", "purchases"],
+    queryFn: () => {
+      console.log("I am now fetch bitch", {
+        lastYearISOString: lastYearISOString.value,
+        nowISOString: nowISOString.value,
+      });
+      return apiClient.api.zettle.purchases
+        .$get({
+          query: {
+            startDate: lastYearISOString.value,
+            endDate: nowISOString.value,
+          },
+        })
+        .then((res) => res.json());
+    },
+  });
+});
+
 const {
   data: purchases,
   isPending,
   isError,
   error,
   refetch,
-} = useQuery({
-  queryKey: ["zettle", "purchases", lastYear.value.toISOString(), now.value],
-  queryFn: () =>
-    apiClient.api.zettle.purchases
-      .$get({
-        query: {
-          startDate: lastYear.value.toISOString(),
-          endDate: now.value.toISOString(),
-        },
-      })
-      .then((res) => res.json()),
-});
+} = useQuery(productsQuery);
 
 const lastYearPurchases = computed(() => {
   if (!purchases.value || !Array.isArray(purchases.value)) return [];
@@ -151,6 +165,9 @@ onMounted(() => {
     const newValue = startOfMinute(new Date());
     if (isEqual(now.value, newValue)) return;
     now.value = newValue;
+    setTimeout(() => {
+      queryClient.refetchQueries(productsQuery.value);
+    }, 200);
   }, 1000);
 
   return () => clearInterval(intervalId);
