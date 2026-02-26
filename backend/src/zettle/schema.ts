@@ -22,12 +22,31 @@ const ProductSchema = z.object({
   // toLocationUuid: z.string().optional(),
   // details: ProductDetailsSchema.optional(),
 });
+
+const CardAttributeSchema = z.object({
+  maskedPan: z.string().optional(),
+  cardType: z.string().optional(),
+  cardPaymentEntryMode: z.string().optional(),
+});
+
 const PaymentSchema = z.object({
   uuid: z.string().optional(),
   type: z.string().optional(),
   amount: z.number().optional(),
   gratuityAmount: z.number().optional(),
+  cardAttributes: CardAttributeSchema.optional(),
 });
+
+export const LeaderboardSchema = z.object({
+  maskedPan: z.string().optional(),
+  cardType: z.string().optional(),
+  displayName: z.string().optional(),
+  totalAmount: z.number().optional(),
+  purchaseCount: z.number().optional(),
+  lastSeen: z.string().optional(),
+});
+
+export type Leaderboard = z.infer<typeof LeaderboardSchema>;
 
 export const PurchaseSchema = z.object({
   source: z.string().optional(),
