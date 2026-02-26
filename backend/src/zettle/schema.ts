@@ -32,7 +32,10 @@ const PaymentSchema = z.object({
 export const PurchaseSchema = z.object({
   source: z.string().optional(),
   purchaseUUID1: z.string().optional(),
-  timestamp: z.string().optional(),
+  timestamp: z
+    .union([z.string(), z.number()])
+    .optional()
+    .transform((val) => (val ? new Date(val).toISOString() : undefined)),
   purchaseNumber: z.number().optional(),
   globalPurchaseNumber: z.number().optional(),
   amount: z.number().optional(),

@@ -162,7 +162,7 @@ const zettleApp = createRoute()
         zettleApi: ZettleAPI,
         cache: CacheClient,
       ) {
-        const purchase = JSON.parse(payload);
+        const purchase = PurchaseSchema.parse(JSON.parse(payload));
 
         const now = utc(Date.now());
         const month = getMonth(now) + 1;
