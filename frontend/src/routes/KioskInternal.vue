@@ -8,8 +8,9 @@ import {
   isEqual,
   startOfDay,
   startOfMinute,
-  subDays,
-  subYears,
+  startOfWeek,
+  startOfMonth,
+  startOfYear,
 } from "date-fns";
 import {
   useZettleWebSocket,
@@ -19,9 +20,9 @@ import {
 const router = useRouter();
 
 const now = ref(startOfMinute(new Date()));
-const lastYear = computed(() => startOfDay(subYears(now.value, 1)));
-const last7Days = computed(() => startOfDay(subDays(now.value, 7)));
-const last30Days = computed(() => startOfDay(subDays(now.value, 30)));
+const startOfCurrentYear = computed(() => startOfYear(now.value));
+const startOfCurrentMonth = computed(() => startOfMonth(now.value));
+const startOfCurrentWeek = computed(() => startOfWeek(now.value, { weekStartsOn: 1 })); // Mandag som start
 
 const parseDate = (value?: string) => (value ? new Date(value) : null);
 
@@ -71,7 +72,7 @@ const exitFullscreen = () => {
   router.push("/");
 };
 
-const lastYearISOString = computed(() => lastYear.value.toISOString());
+const startOfCurrentYearISOString = computed(() => startOfCurrentYear.value.toISOString());
 const nowISOString = computed(() => now.value.toISOString());
 
 const queryClient = useQueryClient();
@@ -83,7 +84,7 @@ const productsQuery = computed(() => {
       return apiClient.api.zettle.purchases
         .$get({
           query: {
-            startDate: lastYearISOString.value,
+            startDate: startOfCurrentYearISOString.value,
             endDate: nowISOString.value,
           },
         })
@@ -117,64 +118,62 @@ useZettleWebSocket(({ purchase }) => {
   }, 200);
 });
 
-const lastYearPurchases = computed(() => {
-  if (!purchases.value || !Array.isArray(purchases.value)) return [];
 
+const yearPurchases = computed(() => {
+  if (!purchases.value || !Array.isArray(purchases.value)) return [];
   return purchases.value.filter((p) => {
     const timestamp = parseDate(p.timestamp);
-    return timestamp ? isAfter(timestamp, lastYear.value) : false;
+    return timestamp ? isAfter(timestamp, startOfCurrentYear.value) || timestamp.getTime() === startOfCurrentYear.value.getTime() : false;
   });
 });
 
-const last7DaysPurchases = computed(() => {
+const monthPurchases = computed(() => {
   if (!purchases.value || !Array.isArray(purchases.value)) return [];
-
   return purchases.value.filter((p) => {
     const timestamp = parseDate(p.timestamp);
-    return timestamp ? isAfter(timestamp, last7Days.value) : false;
+    return timestamp ? isAfter(timestamp, startOfCurrentMonth.value) || timestamp.getTime() === startOfCurrentMonth.value.getTime() : false;
   });
 });
 
-const last30DaysPurchases = computed(() => {
+const weekPurchases = computed(() => {
   if (!purchases.value || !Array.isArray(purchases.value)) return [];
-
   return purchases.value.filter((p) => {
     const timestamp = parseDate(p.timestamp);
-    return timestamp ? isAfter(timestamp, last30Days.value) : false;
+    return timestamp ? isAfter(timestamp, startOfCurrentWeek.value) || timestamp.getTime() === startOfCurrentWeek.value.getTime() : false;
   });
 });
 
-const totalItemsLast7Days = computed(() =>
-  last7DaysPurchases.value.reduce(
+const totalItemsThisWeek = computed(() =>
+  weekPurchases.value.reduce(
     (sum, purchase) => sum + getPurchaseItemCount(purchase),
     0,
   ),
 );
 
-const totalItemsLast30Days = computed(() =>
-  last30DaysPurchases.value.reduce(
+const totalItemsThisMonth = computed(() =>
+  monthPurchases.value.reduce(
     (sum, purchase) => sum + getPurchaseItemCount(purchase),
     0,
   ),
 );
 
-const totalItemsLastYear = computed(() =>
-  lastYearPurchases.value.reduce(
+const totalItemsThisYear = computed(() =>
+  yearPurchases.value.reduce(
     (sum, purchase) => sum + getPurchaseItemCount(purchase),
     0,
   ),
 );
 
-const popularItemsLast7Days = computed(() =>
-  buildPopularItems(last7DaysPurchases.value),
+const popularItemsThisWeek = computed(() =>
+  buildPopularItems(weekPurchases.value),
 );
 
-const popularItemsLast30Days = computed(() =>
-  buildPopularItems(last30DaysPurchases.value),
+const popularItemsThisMonth = computed(() =>
+  buildPopularItems(monthPurchases.value),
 );
 
-const popularItemsLastYear = computed(() =>
-  buildPopularItems(lastYearPurchases.value),
+const popularItemsThisYear = computed(() =>
+  buildPopularItems(yearPurchases.value),
 );
 
 onMounted(() => {
@@ -254,26 +253,27 @@ onMounted(() => {
         <button @click="() => refetch()" class="retry-btn">Prøv igjen</button>
       </div>
       <div v-else class="stats-container">
+
         <div class="section-title">Totalt antall produkter solgt</div>
 
         <div class="cards-grid">
           <div class="stat-card">
-            <div class="card-label">Siste 7 dager</div>
+            <div class="card-label">Denne uken</div>
             <div class="card-value">
-              {{ formatNumber(totalItemsLast7Days) }}
+              {{ formatNumber(totalItemsThisWeek) }}
             </div>
           </div>
 
           <div class="stat-card">
-            <div class="card-label">Siste 30 dager</div>
+            <div class="card-label">Denne måneden</div>
             <div class="card-value">
-              {{ formatNumber(totalItemsLast30Days) }}
+              {{ formatNumber(totalItemsThisMonth) }}
             </div>
           </div>
 
           <div class="stat-card">
-            <div class="card-label">Siste år</div>
-            <div class="card-value">{{ formatNumber(totalItemsLastYear) }}</div>
+            <div class="card-label">Dette året</div>
+            <div class="card-value">{{ formatNumber(totalItemsThisYear) }}</div>
           </div>
         </div>
 
@@ -281,51 +281,51 @@ onMounted(() => {
 
         <div class="popular-grid">
           <div class="popular-card">
-            <div class="card-header">7 dager</div>
+            <div class="card-header">Denne uken</div>
             <div class="items-list">
               <div
-                v-for="item in popularItemsLast7Days"
-                :key="`7d-full-${item.name}`"
+                v-for="item in popularItemsThisWeek"
+                :key="`week-full-${item.name}`"
                 class="item-row"
               >
                 <span class="item-name">{{ item.name }}</span>
                 <span class="item-qty">{{ formatNumber(item.amount) }}</span>
               </div>
-              <div v-if="!popularItemsLast7Days.length" class="empty-state">
+              <div v-if="!popularItemsThisWeek.length" class="empty-state">
                 Ingen data
               </div>
             </div>
           </div>
 
           <div class="popular-card">
-            <div class="card-header">30 dager</div>
+            <div class="card-header">Denne måneden</div>
             <div class="items-list">
               <div
-                v-for="item in popularItemsLast30Days"
-                :key="`30d-full-${item.name}`"
+                v-for="item in popularItemsThisMonth"
+                :key="`month-full-${item.name}`"
                 class="item-row"
               >
                 <span class="item-name">{{ item.name }}</span>
                 <span class="item-qty">{{ formatNumber(item.amount) }}</span>
               </div>
-              <div v-if="!popularItemsLast30Days.length" class="empty-state">
+              <div v-if="!popularItemsThisMonth.length" class="empty-state">
                 Ingen data
               </div>
             </div>
           </div>
 
           <div class="popular-card">
-            <div class="card-header">1 år</div>
+            <div class="card-header">Dette året</div>
             <div class="items-list">
               <div
-                v-for="item in popularItemsLastYear"
-                :key="`1y-full-${item.name}`"
+                v-for="item in popularItemsThisYear"
+                :key="`year-full-${item.name}`"
                 class="item-row"
               >
                 <span class="item-name">{{ item.name }}</span>
                 <span class="item-qty">{{ formatNumber(item.amount) }}</span>
               </div>
-              <div v-if="!popularItemsLastYear.length" class="empty-state">
+              <div v-if="!popularItemsThisYear.length" class="empty-state">
                 Ingen data
               </div>
             </div>
@@ -343,6 +343,7 @@ onMounted(() => {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
+
 .internal-kiosk-screen {
   font-family:
     "Inter",
@@ -352,7 +353,7 @@ onMounted(() => {
     sans-serif !important;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #0f1a2e 0%, #1a2a4e 100%);
+  background: #16213a;
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -376,23 +377,17 @@ onMounted(() => {
   right: 24px;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: #cccccc;
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
   z-index: 1000;
   padding: 0;
   outline: none;
   box-shadow: none;
-}
-
-.close-btn:hover {
-  color: #ffffff;
-  transform: rotate(90deg);
 }
 
 .content {
@@ -478,46 +473,15 @@ onMounted(() => {
 }
 
 .stat-card {
-  background: linear-gradient(
-    135deg,
-    rgba(44, 100, 200, 0.15) 0%,
-    rgba(44, 100, 200, 0.05) 100%
-  );
-  border: 1px solid rgba(99, 150, 220, 0.3);
-  border-radius: 16px;
+  background: #1e2746;
+  border: 1px solid #2d3959;
+  border-radius: 10px;
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-}
-
-.stat-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(99, 150, 220, 0.6),
-    transparent
-  );
-}
-
-.stat-card:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(44, 100, 200, 0.25) 0%,
-    rgba(44, 100, 200, 0.1) 100%
-  );
-  border-color: rgba(99, 150, 220, 0.5);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(44, 100, 200, 0.15);
 }
 
 .card-label {
@@ -573,31 +537,16 @@ onMounted(() => {
 }
 
 .popular-card {
-  background: linear-gradient(
-    135deg,
-    rgba(44, 100, 200, 0.15) 0%,
-    rgba(44, 100, 200, 0.05) 100%
-  );
-  border: 1px solid rgba(99, 150, 220, 0.3);
-  border-radius: 16px;
+  background: #1e2746;
+  border: 1px solid #2d3959;
+  border-radius: 10px;
   overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.popular-card:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(44, 100, 200, 0.25) 0%,
-    rgba(44, 100, 200, 0.1) 100%
-  );
-  border-color: rgba(99, 150, 220, 0.5);
-  box-shadow: 0 12px 40px rgba(44, 100, 200, 0.15);
 }
 
 .card-header {
   padding: 16px 24px;
-  background: rgba(44, 100, 200, 0.1);
-  border-bottom: 1px solid rgba(99, 150, 220, 0.3);
+  background: #232c4a;
+  border-bottom: 1px solid #2d3959;
   font-weight: 600;
   color: #ffffff;
   font-size: 1rem;
@@ -713,6 +662,7 @@ onMounted(() => {
 }
 
 /* Purchase banner */
+
 .purchase-banner {
   position: fixed;
   inset: 0;
