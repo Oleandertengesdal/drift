@@ -6,7 +6,6 @@ import { queryOptions, useQuery, useQueryClient } from "@tanstack/vue-query";
 import {
   isAfter,
   isEqual,
-  startOfDay,
   startOfMinute,
   startOfWeek,
   startOfMonth,
