@@ -14,6 +14,7 @@ import { ZettleAPI } from "./service";
 import z from "zod";
 import { utc } from "@date-fns/utc";
 import { zValidator } from "@hono/zod-validator";
+import leaderboardApp from "./leaderboard";
 
 function getZettleApi() {
   if (env.ZETTLE_API_KEY == null || env.ZETTLE_CLIENT_ID == null) {
@@ -82,6 +83,7 @@ const zettleApp = createRoute()
     }
 
     return c.json(allPurchases);
-  });
+  })
+  .route("/leaderboard", leaderboardApp);
 
 export default zettleApp;
