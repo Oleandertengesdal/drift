@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { apiClient } from '@/api/client';
 
 const serverAddress = ref('mc.tihlde.org');
 const serverStatus = ref('Laster...');
@@ -21,7 +22,8 @@ const copyToClipboard = async () => {
 const fetchServerStatus = async () => {
   isLoading.value = true;
   try {
-    const response = await fetch(`https://api.mcsrvstat.us/3/${serverAddress.value}`);
+    // @ts-ignore - Type definitions will be updated after TS server restart
+    const response = await apiClient.api!.minecraft.status.$get();
     
     if (!response.ok) {
       throw new Error('Kunne ikke hente serverstatus');
@@ -32,8 +34,8 @@ const fetchServerStatus = async () => {
     if (data.online) {
       isOnline.value = true;
       serverStatus.value = 'Online';
-      playerCount.value = `${data.players.online}/${data.players.max}`;
-      serverVersion.value = data.version.name_clean || data.version.name_raw || '1.20.1';
+      playerCount.value = `${data.players?.online || 0}/${data.players?.max || 0}`;
+      serverVersion.value = typeof data.version === 'string' ? data.version : (data.version?.name_clean || data.version?.name_raw || 'Ukjent');
       motd.value = data.motd?.clean ? data.motd.clean.join(' ') : '';
     } else {
       isOnline.value = false;
