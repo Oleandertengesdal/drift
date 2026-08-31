@@ -3,7 +3,7 @@
 FROM node:25-alpine AS base
 WORKDIR /app 
 FROM base AS builder
-RUN npm -g install pnpm
+RUN npm -g install pnpm@10.29.3
 
 # Kopier lock + manifest først for å cache install
 COPY package.json pnpm-lock.yaml* ./
@@ -26,8 +26,6 @@ RUN pnpm build
 FROM base AS runner
 
 WORKDIR /app
-
-RUN npm -g install pnpm
 
 COPY --from=builder /app/frontend/dist/ ./dist
 
